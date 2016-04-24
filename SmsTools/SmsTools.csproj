@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FB549F73-CB9C-4C70-807A-CAC3CE51B361}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmsTools</RootNamespace>
+    <AssemblyName>SmsTools</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppHelper.cs" />
+    <Compile Include="Authentication.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Commands\ATCommand.cs" />
+    <Compile Include="Commands\ATCommandAttribute.cs" />
+    <Compile Include="Commands\CommandParameter.cs" />
+    <Compile Include="Commands\StepwiseATCommand.cs" />
+    <Compile Include="Commands\IATCommand.cs" />
+    <Compile Include="Commands\ICommandParameter.cs" />
+    <Compile Include="Commands\ParamATCommand.cs" />
+    <Compile Include="Commands\SimpleATCommand.cs" />
+    <Compile Include="Operations\IPortPlug.cs" />
+    <Compile Include="Operations\SerialPortPlug.cs" />
+    <Compile Include="Operations\SerialPortConfig.cs" />
+    <Compile Include="PduProfile\DefaultCoder.cs" />
+    <Compile Include="PduProfile\ICoder.cs" />
+    <Compile Include="PduProfile\IPduProfile.cs" />
+    <Compile Include="PduProfile\IPduProfileSettings.cs" />
+    <Compile Include="PduProfile\IPduSegment.cs" />
+    <Compile Include="PduProfile\OctetCoder.cs" />
+    <Compile Include="PduProfile\PduDaSegment.cs" />
+    <Compile Include="PduProfile\PduDcsSegment.cs" />
+    <Compile Include="PduProfile\PduDefaultProfile.cs" />
+    <Compile Include="PduProfile\PduDefaultProfileSettings.cs" />
+    <Compile Include="PduProfile\PduHeaderSegment.cs" />
+    <Compile Include="PduProfile\PduMrSegment.cs" />
+    <Compile Include="PduProfile\PduPidSegment.cs" />
+    <Compile Include="PduProfile\PduScaSegment.cs" />
+    <Compile Include="PduProfile\PduUdSegment.cs" />
+    <Compile Include="PduProfile\PduValueSegmentContract.cs" />
+    <Compile Include="PduProfile\PduSegment.cs" />
+    <Compile Include="PduProfile\PduProfileManager.cs" />
+    <Compile Include="PduProfile\PduVpSegment.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PduProfile\PduAddressSegmentContract.cs" />
+    <Compile Include="PduProfile\UCS2Coder.cs" />
+    <Compile Include="PduSms.cs" />
+    <Compile Include="ServiceCenter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PduProfile\default.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PduProfile\nosca-submit-16bit.json" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

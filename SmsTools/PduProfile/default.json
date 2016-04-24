@@ -1,0 +1,28 @@
+﻿{
+  "sca": {
+    "type": 145,
+    "value": 48601000310
+  },
+  "pdu-header": {
+    "value": 17
+  },
+  "mr": {
+    "value": 0
+  },
+  "da": {
+    "type": 145,
+    "value": 0
+  },
+  "pid": {
+    "value": 0
+  },
+  "dcs": {
+    "value": 8
+  },
+  "vp": {
+    "value": 255
+  },
+  "ud": {
+    "value": ""
+  }
+}

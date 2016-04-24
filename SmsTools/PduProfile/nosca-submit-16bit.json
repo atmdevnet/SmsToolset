@@ -1,0 +1,17 @@
+﻿{
+  "pdu-header": {
+    "value": 17
+  },
+  "da": {
+    "type": 129
+  },
+  "pid": {
+    "value": 0
+  },
+  "dcs": {
+    "value": 8
+  },
+  "vp": {
+    "value": 255
+  }
+}
