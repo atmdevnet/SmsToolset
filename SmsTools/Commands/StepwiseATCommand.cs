@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmsTools.Commands
 {
-    public class StepwiseATCommand : SimpleATCommand, IATCommand
+    public class StepwiseATCommand : SimpleATCommand
     {
         private IEnumerable<ICommandParameter> _steps = null;
         private string _currentCommand = string.Empty;

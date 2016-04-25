@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmsTools.Commands
 {
-    public class ParamATCommand : SimpleATCommand, IATCommand
+    public class ParamATCommand : SimpleATCommand
     {
         public ParamATCommand(string command, ICommandParameter parameter)
             : base(command)
