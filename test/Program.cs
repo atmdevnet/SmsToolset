@@ -56,13 +56,24 @@ namespace test
                     Task.WaitAny(
                         Task.Run(async () =>
                         {
+                            Console.Write("enter pin: ");
+                            var pin = Console.ReadLine();
+
                             var auth = new Authentication();
-                            authenticated = await auth.AuthenticateIfNotReady(modem, 9524);
+                            authenticated = await auth.AuthenticateIfNotReady(modem, int.Parse(pin));
                         })
                     );
 
                     if (!authenticated)
                         return;
+
+                    Task.WaitAny(
+                        Task.Run(async () =>
+                        {
+                            var sms = new PduSms();
+                            var send = await sms.Send(modem, 783314087, "łóż ęść");
+                        })
+                    );
 
                     //Task.WaitAny(
                     //    Task.Run(async () =>
@@ -87,14 +98,6 @@ namespace test
                     //        //var s2 = await sca.SetAddress(modem, 48601000310, true);
                     //    })
                     //);
-
-                    Task.WaitAny(
-                        Task.Run(async () =>
-                        {
-                            var sms = new PduSms();
-                            var send = await sms.Send(modem, 783314087, "łóż ęść");
-                        })
-                    );
 
                     //Task.WaitAny(
                     //    Task.Run(async () =>
