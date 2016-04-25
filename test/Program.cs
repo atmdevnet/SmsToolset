@@ -23,7 +23,7 @@ namespace test
             //if (p.HasDefaultProfile)
             //{
             //    length = 0;
-            //    packet = p.DefaultProfile.GetPacket(48783314087, "华为", out length);
+            //    packet = p.DefaultProfile.GetPacket(48000000000, "华为", out length);
             //}
 
             //using (var ps = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(Program), "profile.json"))
@@ -33,7 +33,7 @@ namespace test
             //    var profile = p.CreateDefaultProfile(settings, "simple");
 
             //    length = 0;
-            //    packet = profile.GetPacket(783314087, "łóżko", out length);
+            //    packet = profile.GetPacket(000000000, "łóżko", out length);
             //}
 
 
@@ -70,8 +70,14 @@ namespace test
                     Task.WaitAny(
                         Task.Run(async () =>
                         {
+                            Console.Write("enter address: ");
+                            var address = Console.ReadLine();
+
+                            Console.Write("enter message: ");
+                            var msg = Console.ReadLine();
+
                             var sms = new PduSms();
-                            var send = await sms.Send(modem, 783314087, "łóż ęść");
+                            var send = await sms.Send(modem, long.Parse(address), msg);
                         })
                     );
 
