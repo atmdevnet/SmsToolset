@@ -77,7 +77,7 @@ namespace SmsTools.PduProfile
 
         private void loadDefaultProfileSettings()
         {
-            using (var profileResource = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(PduProfileManager), "PduProfile.default.json"))
+            using (var profileResource = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(PduProfileManager), "default.json"))
             {
                 var profile = loadProfileSettings(profileResource, typeof(PduDefaultProfileSettings));
                 if (profile != null)
