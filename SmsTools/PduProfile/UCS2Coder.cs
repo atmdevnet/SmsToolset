@@ -25,7 +25,7 @@ namespace SmsTools.PduProfile
             int outputLength = source.Length >> 2;
 
             var chars = new StringBuilder();
-            for (int c = 0; chars.Length < outputLength; chars.Append(Convert.ToChar(int.Parse(source.Substring(c, 4), NumberStyles.HexNumber))), c += 4) { }
+            for (int c = 0; chars.Length < outputLength; chars.Append(Convert.ToChar(UInt16.Parse(source.Substring(c, 4), NumberStyles.HexNumber))), c += 4) { }
 
             return chars.ToString();
         }
@@ -38,10 +38,10 @@ namespace SmsTools.PduProfile
                 return string.Empty;
             }
 
-            var source = string.Concat<char>(value.Take(MaxLength));
+            var source = value.Take(MaxLength);
 
-            length = source.Length * 2;
-            return string.Concat<string>(source.Select(c => Convert.ToInt32(c).ToString("X4")));
+            length = source.Count() * 2;
+            return string.Concat<string>(source.Select(c => Convert.ToUInt16(c).ToString("X4")));
         }
     }
 }
