@@ -13,6 +13,6 @@ namespace SmsTools.Commands
         string SuccessfulResponsePattern { get; }
         bool IgnoreCase { get; }
         bool IsResponseSuccessful(string response);
-        bool UseCommand { get; }
+        bool IsNextParameter { get; }
     }
 }

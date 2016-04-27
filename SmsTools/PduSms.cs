@@ -33,8 +33,8 @@ namespace SmsTools
                 int length = 0;
                 string packet = _profile.GetPacket(destination, message, out length);
 
-                var lengthStep = new CommandParameter($"{length}{Constants.CR}", Constants.ContinueResponse, false, true);
-                var messageStep = new CommandParameter($"{packet}{Constants.SUB}", Constants.BasicSuccessfulResponse, true, false);
+                var lengthStep = new StepwiseCommandParameter($"{length}{Constants.CR}", Constants.ContinueResponse, false);
+                var messageStep = new StepwiseCommandParameter($"{packet}{Constants.SUB}", Constants.BasicSuccessfulResponse, true, true);
 
                 var sendCmd = new StepwiseATCommand(ATCommand.MessageSend.Command(), new ICommandParameter[] { lengthStep, messageStep });
                 await sendCmd.ExecuteAsync(port);
@@ -66,7 +66,7 @@ namespace SmsTools
 
         private void initCommands()
         {
-            var mfParam = new CommandParameter(Constants.MessageFormat.Pdu.ToValueString(), Constants.BasicSuccessfulResponse, true, false);
+            var mfParam = new CommandParameter(Constants.MessageFormat.Pdu.ToValueString(), Constants.BasicSuccessfulResponse);
             _mfCmd = new ParamATCommand(ATCommand.MessageFormat.Command(), mfParam);
         }
     }

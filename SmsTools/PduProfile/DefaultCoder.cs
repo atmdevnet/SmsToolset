@@ -11,7 +11,7 @@ namespace SmsTools.PduProfile
     /// </summary>
     public class DefaultCoder : ICoder
     {
-        private int _maxLength = 160;
+        public int MaxLength { get { return 160; } }
 
 
         public string Decode(string value)

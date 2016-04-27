@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmsTools.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,17 +11,22 @@ namespace SmsTools
     {
         public static string Command(this Enum value)
         {
-            return value.GetEnumAttributeValue<Commands.ATCommandAttribute, string>(a => a.Command);
+            return value.GetEnumAttributeValue<ATCommandAttribute, string>(a => a.Command);
         }
 
         public static bool HasParameters(this Enum value)
         {
-            return value.GetEnumAttributeValue<Commands.ATCommandAttribute, bool>(a => a.HasParameters);
+            return value.GetEnumAttributeValue<ATCommandAttribute, bool>(a => a.HasParameters);
         }
 
         public static bool HasSteps(this Enum value)
         {
-            return value.GetEnumAttributeValue<Commands.ATCommandAttribute, bool>(a => a.HasSteps);
+            return value.GetEnumAttributeValue<ATCommandAttribute, bool>(a => a.HasSteps);
+        }
+
+        public static bool AllowsAnonymous(this Enum value)
+        {
+            return value.GetEnumAttributeValue<ATCommandAttribute, bool>(a => a.AllowsAnonymous);
         }
 
         public static string ToValueString(this Enum value)

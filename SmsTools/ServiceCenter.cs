@@ -16,7 +16,7 @@ namespace SmsTools
 
         public ServiceCenter()
         {
-            _emptyParam = CommandParameter.CreateEmpty(Constants.BasicSuccessfulResponse, true);
+            _emptyParam = CommandParameter.CreateEmpty(Constants.BasicSuccessfulResponse);
             _scaQuery = new SimpleATCommand(ATCommand.ServiceCenterAddressInfo.Command(), _emptyParam);
         }
 
@@ -47,7 +47,7 @@ namespace SmsTools
             var sign = international ? "+" : string.Empty;
             var tosca = international ? Constants.InternationalAddressType : Constants.DomesticAddressType;
 
-            var scaParam = new CommandParameter($"\"{sign}{address}\",{tosca}", Constants.BasicSuccessfulResponse, true, false);
+            var scaParam = new CommandParameter($"\"{sign}{address}\",{tosca}", Constants.BasicSuccessfulResponse);
             var scaCmd = new ParamATCommand(ATCommand.ServiceCenterAddress.Command(), scaParam);
 
             await scaCmd.ExecuteAsync(port);

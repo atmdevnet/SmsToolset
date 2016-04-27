@@ -74,6 +74,8 @@ namespace SmsTools.PduProfile
 
         public class UndefinedEncoder : ICoder
         {
+            public int MaxLength { get { return 0; } }
+
             public string Decode(string value)
             {
                 throw new NotImplementedException();

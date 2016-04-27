@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SmsTools.PduProfile
@@ -11,12 +13,21 @@ namespace SmsTools.PduProfile
     /// </summary>
     public class UCS2Coder : ICoder
     {
-        private int _maxLength = 70;
+        public int MaxLength { get { return 70; } }
 
 
         public string Decode(string value)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(value) || value.Trim().Length < 4 || value.Trim().Length % 2 > 0 || !Regex.IsMatch(value, @"^[a-fA-F0-9]+$"))
+                return string.Empty;
+
+            var source = value.Trim();
+            int outputLength = source.Length >> 2;
+
+            var chars = new StringBuilder();
+            for (int c = 0; chars.Length < outputLength; chars.Append(Convert.ToChar(int.Parse(source.Substring(c, 4), NumberStyles.HexNumber))), c += 4) { }
+
+            return chars.ToString();
         }
 
         public string Encode(string value, out int length)
@@ -27,7 +38,7 @@ namespace SmsTools.PduProfile
                 return string.Empty;
             }
 
-            var source = string.Concat<char>(value.Take(_maxLength));
+            var source = string.Concat<char>(value.Take(MaxLength));
 
             length = source.Length * 2;
             return string.Concat<string>(source.Select(c => Convert.ToInt32(c).ToString("X4")));

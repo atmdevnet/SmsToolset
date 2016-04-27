@@ -12,8 +12,10 @@ namespace SmsTools
         internal static string ToBdcString(this long value)
         {
             var str = value.ToString();
-            var chars = str.PadRight(str.Length + str.Length % 2, 'F').Reverse().ToArray();
-            return string.Concat<string>(chars.Select((c, i) => i % 2 == 0 && i < chars.Length - 1 ? string.Concat(c, chars[i + 1]) : "").Reverse());
+            var chars = str.PadRight(str.Length + str.Length % 2, 'F').ToCharArray();
+            var octets = new StringBuilder();
+            for (int c = 0; c < chars.Length - 1; octets.Append(chars[c + 1]).Append(chars[c]), c += 2) { }
+            return octets.ToString();
         }
 
         internal static int DigitsCount(this long value)

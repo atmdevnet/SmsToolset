@@ -10,5 +10,6 @@ namespace SmsTools.PduProfile
     {
         string Encode(string value, out int length);
         string Decode(string value);
+        int MaxLength { get; }
     }
 }

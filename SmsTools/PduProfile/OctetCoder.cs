@@ -11,7 +11,7 @@ namespace SmsTools.PduProfile
     /// </summary>
     public class OctetCoder : ICoder
     {
-        private int _maxLength = 140;
+        public int MaxLength { get { return 140; } }
 
 
         public string Decode(string value)

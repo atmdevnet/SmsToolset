@@ -34,7 +34,7 @@ namespace SmsTools
             if (pin < 0)
                 return false;
 
-            var pinParam = new CommandParameter(pin.ToString(), Constants.BasicSuccessfulResponse, true, false);
+            var pinParam = new CommandParameter(pin.ToString(), Constants.BasicSuccessfulResponse);
             var pinCmd = new ParamATCommand(ATCommand.PinAuthenticate.Command(), pinParam);
 
             await pinCmd.ExecuteAsync(port);

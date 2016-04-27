@@ -40,8 +40,8 @@ namespace SmsTools.Commands
 
             foreach (var step in _steps)
             {
-                _currentCommand = step.UseCommand ? Command : string.Empty;
-                _currentOperator = step.UseCommand ? "=" : string.Empty;
+                _currentCommand = step.IsNextParameter ? string.Empty : Command;
+                _currentOperator = step.IsNextParameter ? string.Empty : "=";
                 _currentParam = step.Value;
                 Parameter = step;
 
