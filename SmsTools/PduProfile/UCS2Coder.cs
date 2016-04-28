@@ -38,10 +38,14 @@ namespace SmsTools.PduProfile
                 return string.Empty;
             }
 
-            var source = value.Take(MaxLength);
+            var bytes = UnicodeEncoding.Unicode.GetBytes(value.ToCharArray(), 0, Math.Min(value.Length, MaxLength));
 
-            length = source.Count() * 2;
-            return string.Concat<string>(source.Select(c => Convert.ToUInt16(c).ToString("X4")));
+            length = bytes.Length;
+
+            var result = new StringBuilder();
+            for (int c = 0; c < bytes.Length - 1; result.AppendFormat("{1:X2}{0:X2}", bytes[c++], bytes[c++])) { }
+
+            return result.ToString();
         }
     }
 }
