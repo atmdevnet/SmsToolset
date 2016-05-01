@@ -27,8 +27,8 @@ namespace SmsTools.Operations
 
         public bool IsOpen { get { return _port.IsOpen; } }
         public Exception LastError { get; private set; }
-        public int WaitPeriod { get; private set; } = 1000;
-        public int OperationTimeout { get; private set; } = 15000;
+        public int WaitPeriod { get; private set; } = 100;
+        public int OperationTimeout { get; private set; } = 5000;
 
         public SerialPortPlug(SerialPortConfig config)
         {

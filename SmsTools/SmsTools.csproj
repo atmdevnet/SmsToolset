@@ -56,6 +56,7 @@
     <Compile Include="Operations\IPortPlug.cs" />
     <Compile Include="Operations\SerialPortPlug.cs" />
     <Compile Include="Operations\SerialPortConfig.cs" />
+    <Compile Include="PduProfile\BitBag.cs" />
     <Compile Include="PduProfile\DefaultCoder.cs" />
     <Compile Include="PduProfile\ICoder.cs" />
     <Compile Include="PduProfile\IPduProfile.cs" />
