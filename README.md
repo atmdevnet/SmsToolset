@@ -6,10 +6,10 @@ The original key concept of this library is the PDU profile wchich is an object 
 
 In general the library consists of three main parts responsible for:
 - creating and managing PDU profiles,
-- creating commands for terminal equipment (GSM modem),
-- sending commands to and receiving response from terminal.
+- creating commands for communications equipment (GSM modem),
+- sending commands to and receiving response from communications equipment.
 
 Library contains also basic implementation of tools that help with tasks of:
 - authentication by pin,
-- manipulation of service center number,
-- sending and reading messages.
+- handling service center number,
+- sending and reading text messages.
