@@ -70,7 +70,9 @@
     <Compile Include="PduProfile\PduHeaderSegment.cs" />
     <Compile Include="PduProfile\PduMrSegment.cs" />
     <Compile Include="PduProfile\PduPidSegment.cs" />
+    <Compile Include="PduProfile\PduReadHeaderSegment.cs" />
     <Compile Include="PduProfile\PduScaSegment.cs" />
+    <Compile Include="PduProfile\PduSendHeaderSegment.cs" />
     <Compile Include="PduProfile\PduUdSegment.cs" />
     <Compile Include="PduProfile\PduValueSegmentContract.cs" />
     <Compile Include="PduProfile\PduSegment.cs" />
