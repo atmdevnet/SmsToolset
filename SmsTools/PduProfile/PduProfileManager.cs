@@ -21,13 +21,19 @@ namespace SmsTools.PduProfile
 
         public PduProfileManager()
         {
-            loadDefaultProfileSettings();
+            this.DefaultPduProfileSettings = loadDefaultProfileSettings("default-send.json", typeof(PduDefaultSendProfileSettings));
 
             if (this.HasDefaultProfileSettings)
             {
-                DefaultProfile = new PduDefaultProfile(this.DefaultPduProfileSettings);
+                DefaultProfile = new PduDefaultProfile(this.DefaultPduProfileSettings) { Name = "default-send" };
 
                 _profiles[this.DefaultProfile.Name] = this.DefaultProfile;
+            }
+
+            var receiveSettings = loadDefaultProfileSettings("default-receive.json", typeof(PduDefaultReceiveProfileSettings));
+            if (receiveSettings != null)
+            {
+                _profiles["default-receive"] = new PduDefaultProfile(receiveSettings) { Name = "default-receive" };
             }
         }
 
@@ -75,16 +81,25 @@ namespace SmsTools.PduProfile
             return _profiles.Keys.AsEnumerable();
         }
 
-        private void loadDefaultProfileSettings()
+        public int Count
         {
-            using (var profileResource = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(PduProfileManager), "default.json"))
+            get { return _profiles.Count; }
+        }
+
+        private IPduProfileSettings loadDefaultProfileSettings(string name, Type profileType)
+        {
+            IPduProfileSettings result = null;
+
+            using (var profileResource = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(PduProfileManager), name))
             {
-                var profile = loadProfileSettings(profileResource, typeof(PduDefaultProfileSettings));
+                var profile = loadProfileSettings(profileResource, profileType);
                 if (profile != null)
                 {
-                    DefaultPduProfileSettings = profile;
+                    result = profile;
                 }
             }
+
+            return result;
         }
 
         private IPduProfileSettings loadProfileSettings(Stream jsonFile, Type profileType)

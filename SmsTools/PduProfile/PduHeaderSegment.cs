@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SmsTools.PduProfile
@@ -9,11 +11,12 @@ namespace SmsTools.PduProfile
     /// <summary>
     /// PDU header
     /// </summary>
-    public class PduHeaderSegment : IPduSegment
+    public abstract class PduHeaderSegment : IPduSegment
     {
-        private int _header = 0;
+        protected int _header = 0;
 
         public PduSegment Type { get { return PduSegment.PduHeader; } }
+        public bool HasVariableLength { get { return false; } }
 
 
         public PduHeaderSegment(IPduProfileSettings settings)
@@ -27,11 +30,7 @@ namespace SmsTools.PduProfile
             _header = settings.PduHeader.Value;
         }
 
-        public PduHeaderSegment()
-        {
-        }
-
-        public int Length()
+        public virtual int Length()
         {
             return 1;
         }
@@ -41,77 +40,68 @@ namespace SmsTools.PduProfile
             return $"{_header.ToString("X2")}";
         }
 
-        public void SetSameReplyPath(bool value)
+        public virtual void SetSameReplyPath(bool value)
         {
             setHeader(getMask(7, value), value);
         }
 
-        public bool IsSameReplyPath()
+        public virtual bool IsSameReplyPath()
         {
             return (_header & getMask(7, true)) > 0;
         }
 
-        public void SetUserDataContainsHeader(bool value)
+        public virtual void SetUserDataContainsHeader(bool value)
         {
             setHeader(getMask(6, value), value);
         }
 
-        public bool UserDataContainsHeader()
+        public virtual bool UserDataContainsHeader()
         {
             return (_header & getMask(6, true)) > 0;
         }
 
-        public void SetStatusReportRequired(bool value)
-        {
-            setHeader(getMask(5, value), value);
-        }
-
-        public bool IsStatusReportRequired()
-        {
-            return (_header & getMask(5, true)) > 0;
-        }
-
-        public void SetValidityPeriodFormat(VPF value)
-        {
-            _header |= (int)value << 3;
-        }
-
-        public VPF GetValidityPeriodFormat()
-        {
-            int mask = 3 << 3;
-            return (VPF)((_header & mask) >> 3);
-        }
-
-        public void SetRejectDuplicates(bool value)
-        {
-            setHeader(getMask(2, value), value);
-        }
-
-        public bool HasRejectDuplicates()
-        {
-            return (_header & getMask(2, true)) > 0;
-        }
-
-        public void SetMessageType(MTI value)
+        public virtual void SetMessageType(MTI value)
         {
             int mask = (int)value;
             _header |= mask;
         }
 
-        public MTI GetMessageType()
+        public virtual MTI GetMessageType()
         {
             int mask = 3;
             return (MTI)(_header & mask);
         }
 
-        private void setHeader(int mask, bool set)
+        protected void setHeader(int mask, bool set)
         {
             _header = set ? _header | mask : _header & mask;
         }
 
-        private int getMask(int bitPosition, bool setter)
+        protected int getMask(int bitPosition, bool setter)
         {
             return setter ? 1 << bitPosition : ~(1 << bitPosition);
+        }
+
+        public virtual int BytesToRead(byte segmentLength = 0)
+        {
+            return Length();
+        }
+
+        public virtual bool Read(string segmentValue)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != Length() || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
+                    return false;
+
+                _header = int.Parse(segmentValue, NumberStyles.HexNumber);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 
@@ -121,10 +111,10 @@ namespace SmsTools.PduProfile
     /// </summary>
     public enum VPF
     {
-        Invalid,
-        ValidAbsolute,
-        ValidRelative,
-        ValidAbsolute2
+        NotPresent,
+        Enhanced,
+        Relative,
+        Absolute
     }
 
 

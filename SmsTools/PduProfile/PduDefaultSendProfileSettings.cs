@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace SmsTools.PduProfile
 {
+    /// <summary>
+    /// Default profile settings for sending packets.
+    /// </summary>
     [DataContract]
-    public class PduDefaultProfileSettings : IPduProfileSettings
+    public class PduDefaultSendProfileSettings : IPduProfileSettings
     {
         [DataMember(Name = "sca", IsRequired = false)]
         public PduAddressSegmentContract ServiceCenterAddress { get; set; }
@@ -34,6 +37,8 @@ namespace SmsTools.PduProfile
         [DataMember(Name = "ud", IsRequired = false)]
         public PduValueSegmentContract<string> UserData { get; set; }
 
+        public PduValueSegmentContract<string> ServiceCenterTimestamp { get; set; }
+
         public IEnumerable<PduSegment> Sequence
         {
             get
@@ -50,5 +55,8 @@ namespace SmsTools.PduProfile
                 };
             }
         }
+
+        public bool CanDeliver { get; private set; } = false;
+        public bool CanSubmit { get; private set; } = true;
     }
 }

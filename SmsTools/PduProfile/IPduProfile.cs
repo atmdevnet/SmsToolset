@@ -12,6 +12,8 @@ namespace SmsTools.PduProfile
         bool CanSubmit();
         bool CanDeliver();
         string GetPacket(long destination, string message, out int length);
+        string GetPacket(out int length);
+        string GetMessage(string packet, int length);
         bool HasInternationalNumbering();
         bool HasExtendedCharacterSet();
         DCS GetDataCodingScheme();
@@ -19,5 +21,6 @@ namespace SmsTools.PduProfile
         IEnumerable<IPduSegment> PacketSegments();
         IPduProfileSettings Settings { get; }
         Dictionary<PduSegment, IPduSegment> SegmentType();
+        void Reset();
     }
 }

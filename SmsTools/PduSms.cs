@@ -55,7 +55,7 @@ namespace SmsTools
         {
             using (var settingsFile = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(IPduProfileSettings), "nosca-submit-16bit.json"))
             {
-                var settings = _manager.CreateProfileSettings<PduDefaultProfileSettings>(settingsFile);
+                var settings = _manager.CreateProfileSettings<PduDefaultSendProfileSettings>(settingsFile);
                 var profile = _manager.CreateDefaultProfile(settings, "nosca-submit-16bit");
 
                 _manager.AddProfile(profile);

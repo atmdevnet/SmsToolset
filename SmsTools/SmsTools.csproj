@@ -66,12 +66,14 @@
     <Compile Include="PduProfile\PduDaSegment.cs" />
     <Compile Include="PduProfile\PduDcsSegment.cs" />
     <Compile Include="PduProfile\PduDefaultProfile.cs" />
-    <Compile Include="PduProfile\PduDefaultProfileSettings.cs" />
+    <Compile Include="PduProfile\PduDefaultReceiveProfileSettings.cs" />
+    <Compile Include="PduProfile\PduDefaultSendProfileSettings.cs" />
     <Compile Include="PduProfile\PduHeaderSegment.cs" />
     <Compile Include="PduProfile\PduMrSegment.cs" />
     <Compile Include="PduProfile\PduPidSegment.cs" />
-    <Compile Include="PduProfile\PduReadHeaderSegment.cs" />
+    <Compile Include="PduProfile\PduReceiveHeaderSegment.cs" />
     <Compile Include="PduProfile\PduScaSegment.cs" />
+    <Compile Include="PduProfile\PduSctsSegment.cs" />
     <Compile Include="PduProfile\PduSendHeaderSegment.cs" />
     <Compile Include="PduProfile\PduUdSegment.cs" />
     <Compile Include="PduProfile\PduValueSegmentContract.cs" />
@@ -85,12 +87,13 @@
     <Compile Include="ServiceCenter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PduProfile\default.json" />
+    <EmbeddedResource Include="PduProfile\default-send.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PduProfile\nosca-submit-16bit.json" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="PduProfile\default-receive.json" />
     <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

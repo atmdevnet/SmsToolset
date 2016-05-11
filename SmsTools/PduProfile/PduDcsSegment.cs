@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SmsTools.PduProfile
@@ -11,26 +13,30 @@ namespace SmsTools.PduProfile
     /// </summary>
     public class PduDcsSegment : IPduSegment
     {
+        /// <summary>
+        /// default: 7-bit coding scheme
+        /// </summary>
         private int _dcs = 0;
+
         private Dictionary<DCS, Type> _coder = new Dictionary<DCS, System.Type>();
 
         public PduSegment Type { get { return PduSegment.DataCodingScheme; } }
+        public bool HasVariableLength { get { return false; } }
 
         public PduDcsSegment(IPduProfileSettings settings)
         {
-            if (settings == null || settings.DataCodingScheme == null)
+            if (settings == null)
                 throw new ArgumentNullException("Profile settings not specified.");
 
-            if (settings.DataCodingScheme.Value < 0 || settings.DataCodingScheme.Value > 255)
-                throw new ArgumentException("Data coding scheme out of range.");
+            if (settings.DataCodingScheme != null)
+            {
+                if (settings.DataCodingScheme.Value < 0 || settings.DataCodingScheme.Value > 255)
+                    throw new ArgumentException("Data coding scheme out of range.");
 
-            _dcs = settings.DataCodingScheme.Value;
+                _dcs = settings.DataCodingScheme.Value;
+            }
 
             createCoders();
-        }
-
-        public PduDcsSegment()
-        {
         }
 
         public int Length()
@@ -63,6 +69,30 @@ namespace SmsTools.PduProfile
             return ctor.Invoke(null) as ICoder;
         }
 
+        public int BytesToRead(byte segmentLength = 0)
+        {
+            return Length();
+        }
+
+        public bool Read(string segmentValue)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != Length() || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
+                    return false;
+
+                var value = int.Parse(segmentValue, NumberStyles.HexNumber);
+                _dcs = Enum.IsDefined(typeof(DCS), value) ? value : (int)DCS.Other;
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
         private void createCoders()
         {
             _coder[DCS.Default] = typeof(DefaultCoder);
@@ -72,6 +102,9 @@ namespace SmsTools.PduProfile
         }
 
 
+        /// <summary>
+        /// dummy encoder
+        /// </summary>
         public class UndefinedEncoder : ICoder
         {
             public int MaxLength { get { return 0; } }

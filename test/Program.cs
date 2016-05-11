@@ -18,7 +18,6 @@ namespace test
         {
             //int length = 0;
             //string packet = string.Empty;
-
             //var p = new PduProfileManager();
             //if (p.HasDefaultProfile)
             //{
@@ -36,7 +35,7 @@ namespace test
             //    packet = profile.GetPacket(000000000, "łóżko", out length);
             //}
 
-            
+
             var ports = SerialPortPlug.AvailablePorts();
             var config = SerialPortConfig.CreateDefault();
             if (ports.Any())

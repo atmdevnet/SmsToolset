@@ -14,6 +14,7 @@ namespace SmsTools.PduProfile
         private int _mr = 0;
 
         public PduSegment Type { get { return PduSegment.MessageReference; } }
+        public bool HasVariableLength { get { return false; } }
 
         public PduMrSegment(IPduProfileSettings settings)
         {
@@ -29,10 +30,6 @@ namespace SmsTools.PduProfile
             }
         }
 
-        public PduMrSegment()
-        {
-        }
-
         public int Length()
         {
             return 1;
@@ -41,6 +38,16 @@ namespace SmsTools.PduProfile
         public override string ToString()
         {
             return $"{_mr.ToString("X2")}";
+        }
+
+        public int BytesToRead(byte segmentLength = 0)
+        {
+            return Length();
+        }
+
+        public bool Read(string segmentValue)
+        {
+            return false;
         }
     }
 }

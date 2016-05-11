@@ -26,6 +26,8 @@ namespace SmsTools.PduProfile
         DataCodingScheme,
         [Description("VP")]
         ValidityPeriod,
+        [Description("SCTS")]
+        ServiceCenterTimestamp,
         [Description("UD")]
         UserData
     }

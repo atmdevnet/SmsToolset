@@ -15,7 +15,11 @@ namespace SmsTools.PduProfile
         PduValueSegmentContract<int> ProtocolIdentifier { get; }
         PduValueSegmentContract<int> DataCodingScheme { get; }
         PduValueSegmentContract<int> ValidityPeriod { get; }
+        PduValueSegmentContract<string> ServiceCenterTimestamp { get; }
         PduValueSegmentContract<string> UserData { get; }
+
+        bool CanDeliver { get; }
+        bool CanSubmit { get; }
 
         IEnumerable<PduSegment> Sequence { get; }
     }

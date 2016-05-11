@@ -11,23 +11,26 @@ namespace SmsTools.PduProfile
     /// </summary>
     public class PduVpSegment : IPduSegment
     {
-        private int _vp = 0;
+        /// <summary>
+        /// default: maximum period 63 weeks
+        /// </summary>
+        private int _vp = 0xFF;
 
         public PduSegment Type { get { return PduSegment.ValidityPeriod; } }
+        public bool HasVariableLength { get { return false; } }
 
         public PduVpSegment(IPduProfileSettings settings)
         {
-            if (settings == null || settings.ValidityPeriod == null)
+            if (settings == null)
                 throw new ArgumentNullException("Profile settings not specified.");
 
-            if (settings.ValidityPeriod.Value < 0 || settings.ValidityPeriod.Value > 255)
-                throw new ArgumentException("Validity period out of range.");
+            if (settings.ValidityPeriod != null)
+            {
+                if (settings.ValidityPeriod.Value < 0 || settings.ValidityPeriod.Value > 255)
+                    throw new ArgumentException("Validity period out of range.");
 
-            _vp = settings.ValidityPeriod.Value;
-        }
-
-        public PduVpSegment()
-        {
+                _vp = settings.ValidityPeriod.Value;
+            }
         }
 
         public int Length()
@@ -51,6 +54,16 @@ namespace SmsTools.PduProfile
         public VP GetValidityPeriod()
         {
             return Enum.IsDefined(typeof(VP), _vp) ? (VP)_vp : VP.Other;
+        }
+
+        public int BytesToRead(byte segmentLength = 0)
+        {
+            return Length();
+        }
+
+        public bool Read(string segmentValue)
+        {
+            return false;
         }
     }
 

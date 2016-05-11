@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,6 +17,31 @@ namespace SmsTools
             var octets = new StringBuilder();
             for (int c = 0; c < chars.Length - 1; octets.Append(chars[c + 1]).Append(chars[c]), c += 2) { }
             return octets.ToString();
+        }
+
+        internal static byte[] FromBdc(this string value)
+        {
+            var bytes = new byte[value.Length >> 1];
+            for (int c = 0; c < value.Length - 1; bytes[c >> 1] = byte.Parse(new string(new char[] { value[c + 1], value[c] }), NumberStyles.HexNumber), c += 2) { }
+            return bytes;
+        }
+
+        internal static long FromRBcdToDec(this byte[] value)
+        {
+            long result = 0L;
+            var reversed = value.SelectMany(v => new byte[] { (byte)(v >> 4), (byte)(v & 0x0f) }).Reverse();
+            int exp = 0;
+            foreach (var v in reversed.Skip(reversed.First() == 0x0f ? 1 : 0))
+            {
+                result += v * (long)Math.Pow(10, exp++);
+            }
+
+            return result;
+        }
+
+        internal static int FromRBcdToDec(this byte value)
+        {
+            return ((value >> 4) * 10) + (value & 0x0f);
         }
 
         internal static int DigitsCount(this long value)
