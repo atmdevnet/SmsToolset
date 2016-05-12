@@ -31,7 +31,7 @@ namespace SmsTools
             long result = 0L;
             var reversed = value.SelectMany(v => new byte[] { (byte)(v >> 4), (byte)(v & 0x0f) }).Reverse();
             int exp = 0;
-            foreach (var v in reversed.Skip(reversed.First() == 0x0f ? 1 : 0))
+            foreach (var v in reversed.Skip(reversed.Any() && reversed.First() == 0x0f ? 1 : 0))
             {
                 result += v * (long)Math.Pow(10, exp++);
             }

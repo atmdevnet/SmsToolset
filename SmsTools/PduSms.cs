@@ -13,7 +13,7 @@ namespace SmsTools
     public partial class PduSms
     {
         private PduProfileManager _manager = new PduProfileManager();
-        private IPduProfile _profile = null;
+        private IPduProfile _sendProfile = null;
         private IATCommand _mfCmd = null;
 
         public PduSms()
@@ -31,7 +31,7 @@ namespace SmsTools
             if (formatSet)
             {
                 int length = 0;
-                string packet = _profile.GetPacket(destination, message, out length);
+                string packet = _sendProfile.GetPacket(destination, message, out length);
 
                 var lengthStep = new StepwiseCommandParameter($"{length}{Constants.CR}", Constants.ContinueResponse, false);
                 var messageStep = new StepwiseCommandParameter($"{packet}{Constants.SUB}", Constants.BasicSuccessfulResponse, true, true);
@@ -53,14 +53,14 @@ namespace SmsTools
 
         private void initProfile()
         {
-            using (var settingsFile = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(IPduProfileSettings), "nosca-submit-16bit.json"))
+            using (var settingsFile = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(IPduProfileSettings), "nosca-submit-ucs2.json"))
             {
                 var settings = _manager.CreateProfileSettings<PduDefaultSendProfileSettings>(settingsFile);
-                var profile = _manager.CreateDefaultProfile(settings, "nosca-submit-16bit");
+                var profile = _manager.CreateDefaultProfile(settings, "nosca-submit-ucs2");
 
                 _manager.AddProfile(profile);
 
-                _profile = profile;
+                _sendProfile = profile;
             }
         }
 

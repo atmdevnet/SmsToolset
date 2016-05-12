@@ -53,7 +53,7 @@ namespace SmsTools.PduProfile
             }
         }
 
-        public bool CanDeliver { get; private set; } = true;
-        public bool CanSubmit { get; private set; } = false;
+        public bool CanDeliver { get { return true; } }
+        public bool CanSubmit { get { return false; } }
     }
 }

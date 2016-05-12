@@ -89,6 +89,8 @@ namespace SmsTools.PduProfile
 
         public virtual bool Read(string segmentValue)
         {
+            _header = -1;
+
             try
             {
                 if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != Length() || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
@@ -102,6 +104,11 @@ namespace SmsTools.PduProfile
             {
                 return false;
             }
+        }
+
+        public virtual bool IsValid()
+        {
+            return _header >= 0x00 && _header <= 0xff;
         }
     }
 

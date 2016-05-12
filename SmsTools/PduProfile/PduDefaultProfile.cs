@@ -21,8 +21,8 @@ namespace SmsTools.PduProfile
 
         public PduDefaultProfile(IPduProfileSettings settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException("Profile settings not specified.");
+            if (settings == null || !sequenceIsValid(settings))
+                throw new ArgumentNullException("Profile settings not specified or not valid.");
 
             Settings = settings;
 
@@ -31,32 +31,32 @@ namespace SmsTools.PduProfile
 
         public bool CanDeliver()
         {
-            return (_segmentType[PduSegment.PduHeader] as PduHeaderSegment).GetMessageType() == MTI.Delivery;
+            return (_segments.Single(s => s.Type == PduSegment.PduHeader) as PduHeaderSegment).GetMessageType() == MTI.Delivery;
         }
 
         public bool CanSubmit()
         {
-            return (_segmentType[PduSegment.PduHeader] as PduHeaderSegment).GetMessageType() == MTI.Submit;
+            return (_segments.Single(s => s.Type == PduSegment.PduHeader) as PduHeaderSegment).GetMessageType() == MTI.Submit;
         }
 
         public bool HasExtendedCharacterSet()
         {
-            return (_segmentType[PduSegment.DataCodingScheme] as PduDcsSegment).GetCodingScheme() > DCS.Default;
+            return (_segments.Single(s => s.Type == PduSegment.DataCodingScheme) as PduDcsSegment).GetCodingScheme() > DCS.Default;
         }
 
         public bool HasInternationalNumbering()
         {
-            return (_segmentType[PduSegment.DestinationAddress] as PduDaSegment).HasInternationalNumbering;
+            return (_segments.Single(s => s.Type == PduSegment.DestinationAddress) as PduDaSegment).HasInternationalNumbering;
         }
 
         public bool IsServiceCenterAddressDefined()
         {
-            return (_segmentType[PduSegment.ServiceCenterAddress] as PduScaSegment).HasAddress();
+            return (_segments.Single(s => s.Type == PduSegment.ServiceCenterAddress) as PduScaSegment).HasAddress();
         }
 
         public DCS GetDataCodingScheme()
         {
-            return (_segmentType[PduSegment.DataCodingScheme] as PduDcsSegment).GetCodingScheme();
+            return (_segments.Single(s => s.Type == PduSegment.DataCodingScheme) as PduDcsSegment).GetCodingScheme();
         }
 
         /// <summary>
@@ -87,17 +87,19 @@ namespace SmsTools.PduProfile
         /// <summary>
         /// Decodes message from specified PDU.
         /// </summary>
-        public string GetMessage(string packet, int length)
+        public MessageInfo GetMessage(string packet, int length)
         {
+            var result = new MessageInfo();
+
             if (string.IsNullOrWhiteSpace(packet) || length <= 0 || packet.Trim().Length < 28 || packet.Trim().Length % 2 > 0 || !Regex.IsMatch(packet, @"^[a-fA-F0-9]+$"))
-                return string.Empty;
+                return result;
 
             var source = packet.Trim();
 
             var scaLength = byte.Parse(packet.Substring(0, 2), NumberStyles.HexNumber);
 
             if (source.Length - ((scaLength + 1) << 1) != (length << 1))
-                return string.Empty;
+                return result;
 
             int byteIndex = 0;
 
@@ -112,7 +114,15 @@ namespace SmsTools.PduProfile
                 byteIndex += ((bytesToRead << 1) + shift);
             }
 
-            return (_segmentType[PduSegment.UserData] as PduUdSegment).GetMessage();
+            return getDecodedMessage(result);
+        }
+
+        /// <summary>
+        /// Gets message from current profile content.
+        /// </summary>
+        public MessageInfo GetMessage()
+        {
+            return getDecodedMessage(new MessageInfo());
         }
 
         public IEnumerable<IPduSegment> PacketSegments()
@@ -131,6 +141,11 @@ namespace SmsTools.PduProfile
             createSequence();
         }
 
+
+        private bool sequenceIsValid(IPduProfileSettings settings)
+        {
+            return (settings.CanDeliver ^ settings.CanSubmit) && new HashSet<PduSegment>(settings.Sequence).Count == settings.Sequence.Count();
+        }
 
         private void createSegments()
         {
@@ -158,12 +173,39 @@ namespace SmsTools.PduProfile
 
         private void setDestination(long destination)
         {
-            (_segmentType[PduSegment.DestinationAddress] as PduDaSegment).SetAddress(destination);
+            (_segments.Single(s => s.Type == PduSegment.DestinationAddress) as PduDaSegment).SetAddress(destination);
+        }
+
+        private long getDestination()
+        {
+            return (_segments.Single(s => s.Type == PduSegment.DestinationAddress) as PduDaSegment).GetAddress();
         }
 
         private void setMessage(string message)
         {
-            (_segmentType[PduSegment.UserData] as PduUdSegment).SetUserData(message);
+            (_segments.Single(s => s.Type == PduSegment.UserData) as PduUdSegment).SetUserData(message);
+        }
+
+        private string getMessage()
+        {
+            return (_segments.Single(s => s.Type == PduSegment.UserData) as PduUdSegment).GetMessage();
+        }
+
+        private DateTime getTimestamp()
+        {
+            return _segments.Any(s => s.Type == PduSegment.ServiceCenterTimestamp) 
+                ? (_segments.Single(s => s.Type == PduSegment.ServiceCenterTimestamp) as PduSctsSegment).LocalDateTime()
+                : new DateTime();
+        }
+
+        private MessageInfo getDecodedMessage(MessageInfo msg)
+        {
+            msg.IsValid = _segments.All(s => s.IsValid());
+            msg.Message = getMessage();
+            msg.Sender = getDestination();
+            msg.Date = getTimestamp();
+
+            return msg;
         }
     }
 }

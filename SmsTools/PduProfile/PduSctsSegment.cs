@@ -13,7 +13,7 @@ namespace SmsTools.PduProfile
     /// </summary>
     public class PduSctsSegment : IPduSegment
     {
-        private DateTimeOffset _timestamp = DateTimeOffset.UtcNow;
+        private DateTimeOffset _timestamp = new DateTimeOffset();
         private string _scts = string.Empty;
 
         public PduSegment Type { get { return PduSegment.ServiceCenterTimestamp; } }
@@ -37,6 +37,8 @@ namespace SmsTools.PduProfile
 
         public bool Read(string segmentValue)
         {
+            _timestamp = new DateTimeOffset();
+
             try
             {
                 if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != Length() || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
@@ -58,9 +60,19 @@ namespace SmsTools.PduProfile
             }
         }
 
+        public bool IsValid()
+        {
+            return _timestamp != new DateTimeOffset();
+        }
+
         public DateTime LocalDateTime()
         {
             return _timestamp.LocalDateTime;
+        }
+
+        public override string ToString()
+        {
+            return _scts;
         }
 
 

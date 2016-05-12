@@ -49,5 +49,10 @@ namespace SmsTools.PduProfile
         {
             return false;
         }
+
+        public bool IsValid()
+        {
+            return true;
+        }
     }
 }

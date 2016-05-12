@@ -76,6 +76,8 @@ namespace SmsTools.PduProfile
 
         public bool Read(string segmentValue)
         {
+            _dcs = (int)DCS.Other;
+
             try
             {
                 if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != Length() || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
@@ -90,6 +92,11 @@ namespace SmsTools.PduProfile
             {
                 return false;
             }
+        }
+
+        public bool IsValid()
+        {
+            return GetCodingScheme() != DCS.Other;
         }
 
 

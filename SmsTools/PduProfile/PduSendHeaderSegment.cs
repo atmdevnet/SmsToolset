@@ -14,6 +14,8 @@ namespace SmsTools.PduProfile
         public PduSendHeaderSegment(IPduProfileSettings settings)
             : base(settings)
         {
+            if (!settings.CanSubmit || GetMessageType() != MTI.Submit)
+                throw new ArgumentException("Profile settings not valid.");
         }
 
         public void SetStatusReportRequired(bool value)
@@ -45,6 +47,11 @@ namespace SmsTools.PduProfile
         public bool HasRejectDuplicates()
         {
             return (_header & getMask(2, true)) > 0;
+        }
+
+        public override bool IsValid()
+        {
+            return base.IsValid() && GetMessageType() == MTI.Submit;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace SmsTools.PduProfile
         public PduReceiveHeaderSegment(IPduProfileSettings settings)
             : base(settings)
         {
+            if (!settings.CanDeliver || GetMessageType() != MTI.Delivery)
+                throw new ArgumentException("Profile settings not valid.");
         }
 
         public bool IsStateReportRequested()
@@ -24,6 +26,11 @@ namespace SmsTools.PduProfile
         public bool IsMoreMessagesSent()
         {
             return (_header & getMask(2, true)) > 0;
+        }
+
+        public override bool IsValid()
+        {
+            return base.IsValid() && GetMessageType() == MTI.Delivery;
         }
     }
 }

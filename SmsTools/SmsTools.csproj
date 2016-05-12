@@ -62,6 +62,7 @@
     <Compile Include="PduProfile\IPduProfile.cs" />
     <Compile Include="PduProfile\IPduProfileSettings.cs" />
     <Compile Include="PduProfile\IPduSegment.cs" />
+    <Compile Include="PduProfile\MessageInfo.cs" />
     <Compile Include="PduProfile\OctetCoder.cs" />
     <Compile Include="PduProfile\PduDaSegment.cs" />
     <Compile Include="PduProfile\PduDcsSegment.cs" />
@@ -90,7 +91,7 @@
     <EmbeddedResource Include="PduProfile\default-send.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PduProfile\nosca-submit-16bit.json" />
+    <EmbeddedResource Include="PduProfile\nosca-submit-ucs2.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PduProfile\default-receive.json" />

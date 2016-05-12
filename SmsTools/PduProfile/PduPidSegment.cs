@@ -52,6 +52,8 @@ namespace SmsTools.PduProfile
 
         public bool Read(string segmentValue)
         {
+            _pid = -1;
+
             try
             {
                 if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != Length() || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
@@ -65,6 +67,11 @@ namespace SmsTools.PduProfile
             {
                 return false;
             }
+        }
+
+        public bool IsValid()
+        {
+            return _pid >= 0x00 && _pid <= 0xff;
         }
     }
 }

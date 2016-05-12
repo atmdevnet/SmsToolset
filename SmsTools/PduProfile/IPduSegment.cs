@@ -13,5 +13,6 @@ namespace SmsTools.PduProfile
         bool HasVariableLength { get; }
         int BytesToRead(byte segmentLength);
         bool Read(string segmentValue);
+        bool IsValid();
     }
 }

@@ -82,6 +82,8 @@ namespace SmsTools.PduProfile
 
         public bool Read(string segmentValue)
         {
+            _addressValue = 0L;
+
             try
             {
                 if (string.IsNullOrWhiteSpace(segmentValue) || segmentValue.Length % 2 > 0 || segmentValue.OctetsCount() != _bytesToRead || !Regex.IsMatch(segmentValue, @"^[a-fA-F0-9]+$"))
@@ -101,6 +103,11 @@ namespace SmsTools.PduProfile
             {
                 return false;
             }
+        }
+
+        public bool IsValid()
+        {
+            return HasAddress();
         }
     }
 }
