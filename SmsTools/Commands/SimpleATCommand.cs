@@ -39,10 +39,7 @@ namespace SmsTools.Commands
                 return string.Empty;
             }
 
-            await port.SendAsync(prepareCommand());
-            Response = await port.ReceiveAsync();
-
-            return Response;
+            return Response = await port.SendAndReceiveAsync(prepareCommand());
         }
 
         public virtual bool Succeeded()

@@ -30,5 +30,10 @@ namespace SmsTools.Operations
         {
             return new SerialPortConfig() { Name = "COM1", BaudRate = 9600, Parity = Parity.None, DataBits = 8, StopBits = StopBits.One };
         }
+
+        public dynamic GetConfig()
+        {
+            return new { Name = Name, BaudRate = BaudRate, Parity = Parity, DataBits = DataBits, StopBits = StopBits };
+        }
     }
 }

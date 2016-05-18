@@ -44,6 +44,7 @@
     <Compile Include="Authentication.cs" />
     <Compile Include="Commands\StepwiseCommandParameter.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DeviceStatus.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Commands\ATCommand.cs" />
     <Compile Include="Commands\ATCommandAttribute.cs" />

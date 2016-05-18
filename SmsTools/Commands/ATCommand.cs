@@ -13,6 +13,21 @@ namespace SmsTools.Commands
         /// </summary>
         [ATCommand(Command = "ATI", AllowsAnonymous = true)]
         DefaultInfo,
+        /// <summary>
+        /// AT+CSQ
+        /// </summary>
+        [ATCommand(Command = "AT+CSQ")]
+        ReceivedSignalStrengthInfo,
+        /// <summary>
+        /// AT^CSNR
+        /// </summary>
+        [ATCommand(Command = "AT^CSNR?")]
+        ReceivedSignalCodePowerInfo,
+        /// <summary>
+        /// AT^SYSINFO
+        /// </summary>
+        [ATCommand(Command = "AT^SYSINFO", AllowsAnonymous = true)]
+        SystemInfo,
 
         /// <summary>
         /// AT+CPIN?

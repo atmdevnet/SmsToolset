@@ -9,8 +9,8 @@ namespace SmsTools.Operations
     public interface IPortPlug : IDisposable
     {
         bool IsOpen { get; }
-        Task SendAsync(string data);
-        Task<string> ReceiveAsync();
+        Task<string> SendAndReceiveAsync(string data);
         Exception LastError { get; }
+        dynamic GetConfig();
     }
 }

@@ -17,17 +17,12 @@ namespace SmsTools.Operations
         private bool _disposed = false;
         private SerialPortConfig _config = SerialPortConfig.CreateDefault();
         private SerialPort _port = new SerialPort();
-        private long _result = (long)Result.None;
         private StringBuilder _buffer = new StringBuilder();
+        private ManualResetEventSlim _wait = new ManualResetEventSlim();
 
-        private enum Result:long
-        {
-            None, Chars, Eof, Error
-        }
-
-        public bool IsOpen { get { return _port.IsOpen; } }
+        public bool IsOpen { get; private set; }
         public Exception LastError { get; private set; }
-        public int WaitPeriod { get; private set; } = 100;
+        public dynamic GetConfig() { return _config.GetConfig(); }
         public int OperationTimeout { get; private set; } = 5000;
 
         public SerialPortPlug(SerialPortConfig config)
@@ -40,50 +35,25 @@ namespace SmsTools.Operations
             configurePort();
         }
 
-        public async Task SendAsync(string data)
+        public async Task<string> SendAndReceiveAsync(string data)
         {
-            Interlocked.Exchange(ref _result, (long)Result.None);
+            _wait.Reset();
             _buffer.Clear();
 
             if (!_port.IsOpen || data == null)
             {
-                return;
+                return string.Empty;
             }
 
-            await Task.Run(() =>
-            {
-                _port.DiscardOutBuffer();
-                _port.DiscardInBuffer();
-                _port.Write(data);
-            });
-        }
+            _port.DiscardOutBuffer();
+            _port.DiscardInBuffer();
+            _port.Write(data);
 
-        public async Task<string> ReceiveAsync()
-        {
-            return await Task.Run<string>(() => 
-            {
-                Task.WaitAny(new Task[] { Task.Run(() => 
-                {
-                    while (Interlocked.Read(ref _result) == (long)Result.None)
-                    {
-                        Task.WaitAny(Task.Delay(WaitPeriod));
-                    }
-                }) }, OperationTimeout);
+            var response = await Task.WhenAny<string>(Task.Run<string>(() => {
+                return _wait.Wait(OperationTimeout) ? _buffer.ToString() : string.Empty;
+            }));
 
-                if (Interlocked.Read(ref _result) == (long)Result.Chars)
-                {
-                    Task.WaitAny(new Task[] { Task.Run(() => 
-                    {
-                        while (!Regex.IsMatch(_buffer.ToString(), @"\s*(ok|>)\s*$", RegexOptions.IgnoreCase)
-                            && !Regex.IsMatch(_buffer.ToString(), @"error", RegexOptions.IgnoreCase))
-                        {
-                            Task.WaitAny(Task.Delay(WaitPeriod));
-                        }
-                    }) }, OperationTimeout);
-                }
-
-                return _buffer.ToString();
-            });
+            return await response;
         }
 
         public static IEnumerable<string> AvailablePorts()
@@ -109,22 +79,34 @@ namespace SmsTools.Operations
             try
             {
                 _port.Open();
+                IsOpen = _port.IsOpen;
             }
             catch(Exception ex) { LastError = ex; }
         }
 
         private void _port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Interlocked.Exchange(ref _result, (long)e.EventType);
-
             _buffer.Append((sender as SerialPort).ReadExisting());
+
+            if (e.EventType == SerialData.Eof)
+            {
+                _wait.Set();
+            }
+            else if (e.EventType == SerialData.Chars)
+            {
+                if (Regex.IsMatch(_buffer.ToString(), @"\s*(ok|>)\s*$", RegexOptions.IgnoreCase)
+                    || Regex.IsMatch(_buffer.ToString(), @"error", RegexOptions.IgnoreCase))
+                {
+                    _wait.Set();
+                }
+            }
         }
 
         private void _port_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {
-            Interlocked.Exchange(ref _result, (long)Result.Error);
-
             LastError = new Exception($"Error received: {e.EventType}.");
+
+            _wait.Set();
         }
 
         private void _port_PinChanged(object sender, SerialPinChangedEventArgs e)
@@ -155,6 +137,13 @@ namespace SmsTools.Operations
                         _port.Close();
                         _port.Dispose();
                         _port = null;
+                    }
+
+                    if (_wait != null)
+                    {
+                        _wait.Set();
+                        _wait.Dispose();
+                        _wait = null;
                     }
                 }
 

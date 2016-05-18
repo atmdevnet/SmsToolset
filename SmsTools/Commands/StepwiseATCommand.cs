@@ -36,19 +36,24 @@ namespace SmsTools.Commands
                 return string.Empty;
             }
 
-            await Task.Yield();
+            var currentStepTask = executeStep(_steps.First(), port);
 
-            foreach (var step in _steps)
+            bool next = false;
+            foreach (var step in _steps.Skip(1))
             {
-                _currentCommand = step.IsNextParameter ? string.Empty : Command;
-                _currentOperator = step.IsNextParameter ? string.Empty : "=";
-                _currentParam = step.Value;
-                Parameter = step;
+                await currentStepTask.ContinueWith(completedStepTask => {
+                    next = !completedStepTask.IsFaulted && completedStepTask.Result == true;
+                    if (next)
+                    {
+                        currentStepTask = executeStep(step, port);
+                    }
+                });
 
-                Task.WaitAny(Task.Run(async () => { await base.ExecuteAsync(port); }));
-                if (!base.Succeeded())
+                if (!next)
                     break;
             }
+
+            await currentStepTask;
 
             return Response;
         }
@@ -56,6 +61,18 @@ namespace SmsTools.Commands
         protected override string prepareCommand()
         {
             return $"{_currentCommand}{_currentOperator}{_currentParam}";
+        }
+
+        private async Task<bool> executeStep(ICommandParameter step, IPortPlug port)
+        {
+            _currentCommand = step.IsNextParameter ? string.Empty : Command;
+            _currentOperator = step.IsNextParameter ? string.Empty : "=";
+            _currentParam = step.Value;
+            Parameter = step;
+
+            await base.ExecuteAsync(port);
+
+            return base.Succeeded();
         }
     }
 }
