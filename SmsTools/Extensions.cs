@@ -1,6 +1,7 @@
 ﻿using SmsTools.Commands;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,5 +35,17 @@ namespace SmsTools
             return Convert.ToInt32(value).ToString();
         }
 
+        public static string Description(this Enum value)
+        {
+            return value.GetEnumAttributeValue<DescriptionAttribute, string>(a => a.Description);
+        }
+
+        public static Constants.MessageStorage ToMessageStorage(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return Constants.MessageStorage.Unspecified;
+
+            return Enum.GetValues(typeof(Constants.MessageStorage)).Cast<Constants.MessageStorage>().FirstOrDefault(e => e.Description().Equals(value));
+        }
     }
 }

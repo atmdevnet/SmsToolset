@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,28 @@ namespace SmsTools
         public enum MessageFormat
         {
             Pdu, Text
+        }
+
+        public enum MessageStorage
+        {
+            Unspecified,
+            [Description("\"MT\"")]
+            MobileAssociated,
+            [Description("\"ME\"")]
+            MobileEquipment,
+            [Description("\"SM\"")]
+            Sim,
+            [Description("\"SR\"")]
+            StateReport
+        }
+
+        public enum MessageStatus
+        {
+            Unread,
+            Read,
+            Unsent,
+            Sent,
+            Any
         }
     }
 }

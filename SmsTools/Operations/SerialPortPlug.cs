@@ -88,17 +88,12 @@ namespace SmsTools.Operations
         {
             _buffer.Append((sender as SerialPort).ReadExisting());
 
-            if (e.EventType == SerialData.Eof)
+            if (e.EventType == SerialData.Eof
+                || (e.EventType == SerialData.Chars
+                    && (Regex.IsMatch(_buffer.ToString(), @"\s*(ok|>)\s*$", RegexOptions.IgnoreCase)
+                        || Regex.IsMatch(_buffer.ToString(), @"error", RegexOptions.IgnoreCase))))
             {
                 _wait.Set();
-            }
-            else if (e.EventType == SerialData.Chars)
-            {
-                if (Regex.IsMatch(_buffer.ToString(), @"\s*(ok|>)\s*$", RegexOptions.IgnoreCase)
-                    || Regex.IsMatch(_buffer.ToString(), @"error", RegexOptions.IgnoreCase))
-                {
-                    _wait.Set();
-                }
             }
         }
 

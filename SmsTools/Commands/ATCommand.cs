@@ -76,6 +76,33 @@ namespace SmsTools.Commands
         /// AT+CMGS=
         /// </summary>
         [ATCommand(Command = "AT+CMGS=", HasParameters = true, HasSteps = true)]
-        MessageSend
+        MessageSend,
+
+        /// <summary>
+        /// AT+CPMS?
+        /// </summary>
+        [ATCommand(Command = "AT+CPMS?")]
+        MessageStorageInfo,
+        /// <summary>
+        /// AT+CPMS=
+        /// </summary>
+        [ATCommand(Command = "AT+CPMS=", HasParameters = true)]
+        MessageStorage,
+
+        /// <summary>
+        /// AT+CMGL=
+        /// </summary>
+        [ATCommand(Command = "AT+CMGL=", HasParameters = true)]
+        MessageList,
+        /// <summary>
+        /// AT+CMGR=
+        /// </summary>
+        [ATCommand(Command = "AT+CMGR=", HasParameters = true)]
+        MessageRead,
+        /// <summary>
+        /// AT+CMGD=
+        /// </summary>
+        [ATCommand(Command = "AT+CMGD=", HasParameters = true)]
+        MessageDelete
     }
 }

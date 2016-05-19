@@ -54,6 +54,7 @@
     <Compile Include="Commands\ICommandParameter.cs" />
     <Compile Include="Commands\ParamATCommand.cs" />
     <Compile Include="Commands\SimpleATCommand.cs" />
+    <Compile Include="MessageStorage.cs" />
     <Compile Include="Operations\IPortPlug.cs" />
     <Compile Include="Operations\SerialPortPlug.cs" />
     <Compile Include="Operations\SerialPortConfig.cs" />
