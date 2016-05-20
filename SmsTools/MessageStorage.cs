@@ -167,7 +167,7 @@ namespace SmsTools
                         if (itemValues.Length < 3 || itemValues.Any(v => !string.IsNullOrEmpty(v) && !int.TryParse(v, out value)))
                             throw new Exception();
 
-                        var item = itemValues.Select(v => int.Parse(v)).ToArray();
+                        var item = itemValues.Select(v => !string.IsNullOrEmpty(v) ? int.Parse(v) : 0).ToArray();
 
                         items.Add(new MessageStorageItem() { Index = item[0], Status = (Constants.MessageStatus)item[1], Length = item.Last() });
                     }
