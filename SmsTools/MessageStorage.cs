@@ -164,7 +164,7 @@ namespace SmsTools
                         var itemValue = match.Groups[1].Value.Trim();
                         var itemValues = itemValue.Split(',');
                         int value = 0;
-                        if (itemValues.Length < 3 || itemValues.Any(v => !int.TryParse(v, out value)))
+                        if (itemValues.Length < 3 || itemValues.Any(v => !string.IsNullOrEmpty(v) && !int.TryParse(v, out value)))
                             throw new Exception();
 
                         var item = itemValues.Select(v => int.Parse(v)).ToArray();
