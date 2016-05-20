@@ -45,7 +45,7 @@ namespace SmsTools
             if (string.IsNullOrWhiteSpace(value))
                 return Constants.MessageStorage.Unspecified;
 
-            return Enum.GetValues(typeof(Constants.MessageStorage)).Cast<Constants.MessageStorage>().FirstOrDefault(e => e.Description().Equals(value));
+            return Enum.GetValues(typeof(Constants.MessageStorage)).Cast<Constants.MessageStorage>().FirstOrDefault(e => { var descr = e.Description(); return !string.IsNullOrEmpty(descr) && descr.Equals(value); });
         }
     }
 }
