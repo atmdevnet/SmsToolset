@@ -64,7 +64,7 @@
     <Compile Include="PduProfile\IPduProfile.cs" />
     <Compile Include="PduProfile\IPduProfileSettings.cs" />
     <Compile Include="PduProfile\IPduSegment.cs" />
-    <Compile Include="PduProfile\MessageInfo.cs" />
+    <Compile Include="PduProfile\MessageDetails.cs" />
     <Compile Include="PduProfile\OctetCoder.cs" />
     <Compile Include="PduProfile\PduDaSegment.cs" />
     <Compile Include="PduProfile\PduDcsSegment.cs" />

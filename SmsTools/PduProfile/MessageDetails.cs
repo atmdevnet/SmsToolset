@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmsTools.PduProfile
 {
-    public class MessageInfo
+    public class MessageDetails
     {
         public string Message { get; internal set; }
         public long Sender { get; internal set; }

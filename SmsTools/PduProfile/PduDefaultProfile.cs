@@ -87,9 +87,9 @@ namespace SmsTools.PduProfile
         /// <summary>
         /// Decodes message from specified PDU.
         /// </summary>
-        public MessageInfo GetMessage(string packet, int length)
+        public MessageDetails GetMessage(string packet, int length)
         {
-            var result = new MessageInfo();
+            var result = new MessageDetails();
 
             if (string.IsNullOrWhiteSpace(packet) || length <= 0 || packet.Trim().Length < 28 || packet.Trim().Length % 2 > 0 || !Regex.IsMatch(packet, @"^[a-fA-F0-9]+$"))
                 return result;
@@ -120,9 +120,9 @@ namespace SmsTools.PduProfile
         /// <summary>
         /// Gets message from current profile content.
         /// </summary>
-        public MessageInfo GetMessage()
+        public MessageDetails GetMessage()
         {
-            return getDecodedMessage(new MessageInfo());
+            return getDecodedMessage(new MessageDetails());
         }
 
         public IEnumerable<IPduSegment> PacketSegments()
@@ -198,7 +198,7 @@ namespace SmsTools.PduProfile
                 : new DateTime();
         }
 
-        private MessageInfo getDecodedMessage(MessageInfo msg)
+        private MessageDetails getDecodedMessage(MessageDetails msg)
         {
             msg.IsValid = _segments.All(s => s.IsValid());
             msg.Message = getMessage();

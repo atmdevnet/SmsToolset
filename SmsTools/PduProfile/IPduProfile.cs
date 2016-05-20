@@ -13,8 +13,8 @@ namespace SmsTools.PduProfile
         bool CanDeliver();
         string GetPacket(long destination, string message, out int length);
         string GetPacket(out int length);
-        MessageInfo GetMessage(string packet, int length);
-        MessageInfo GetMessage();
+        MessageDetails GetMessage(string packet, int length);
+        MessageDetails GetMessage();
         bool HasInternationalNumbering();
         bool HasExtendedCharacterSet();
         DCS GetDataCodingScheme();

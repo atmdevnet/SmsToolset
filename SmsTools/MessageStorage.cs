@@ -78,9 +78,9 @@ namespace SmsTools
             return result;
         }
 
-        public async Task<MessageInfo> Read(IPortPlug port, MessageStorageItem item)
+        public async Task<MessageDetails> Read(IPortPlug port, MessageStorageItem item)
         {
-            MessageInfo result = new MessageInfo();
+            MessageDetails result = new MessageDetails();
 
             if (item == null || !item.IsValid || !_manager.ContainsProfile("default-receive"))
                 return result;
@@ -100,10 +100,29 @@ namespace SmsTools
             return result;
         }
 
-
-        private MessageInfo getMessage(string response)
+        public async Task<bool> Delete(IPortPlug port, MessageStorageItem item, DeleteFlag deleteFlag = DeleteFlag.SpecifiedByIndex)
         {
-            MessageInfo result = new MessageInfo();
+            bool result = false;
+
+            if (item == null || !item.IsValid)
+                return result;
+
+            if (await setFormat(port))
+            {
+                var deleteParam = new CommandParameter($"{item.Index},{deleteFlag.ToValueString()}", Constants.BasicSuccessfulResponse);
+                var deleteCmd = new ParamATCommand(ATCommand.MessageDelete.Command(), deleteParam);
+
+                await deleteCmd.ExecuteAsync(port);
+                result = deleteCmd.Succeeded();
+            }
+
+            return result;
+        }
+
+
+        private MessageDetails getMessage(string response)
+        {
+            MessageDetails result = new MessageDetails();
 
             try
             {
@@ -238,5 +257,14 @@ namespace SmsTools
         public Constants.MessageStatus Status { get; set; }
         public int Length { get; set; }
         public bool IsValid { get { return Index >= 0 && Length >= 0; } }
+    }
+
+    public enum DeleteFlag
+    {
+        SpecifiedByIndex,
+        Read,
+        ReadAndSent,
+        ExcludeUnread,
+        All
     }
 }
