@@ -13,3 +13,5 @@ Library contains also basic implementation of tools that help with tasks of:
 - authentication by pin,
 - handling service center number,
 - sending and reading text messages.
+
+For more look at the article at codeproject.com: [SmsToolset library for sending sms over GSM network using PDU format](http://www.codeproject.com/Articles/1097367/SmsToolset-library-for-sending-sms-over-GSM-networ)
