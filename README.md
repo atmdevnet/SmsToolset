@@ -16,4 +16,4 @@ Library contains also basic implementation of tools that help with tasks of:
 
 For more look at the article at codeproject.com: [SmsToolset library for sending sms over GSM network using PDU format](http://www.codeproject.com/Articles/1097367/SmsToolset-library-for-sending-sms-over-GSM-networ)
 
-Nuget package targeting .NET Standard 2.0 is also available at: [SmsToolset](https://github.com/atmdevnet/SmsToolset)
+Nuget package targeting .NET Standard 2.0 is also available at: [SmsToolset](https://www.nuget.org/packages/SmsToolset/)
